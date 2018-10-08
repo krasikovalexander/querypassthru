@@ -20,7 +20,6 @@ var querypassthru = {
 				}
 
 				if (config.hosts && config.hosts.length) {
-					console.log(config.hosts);
 					if (!config.hosts.includes(link.host)) {
 						continue;
 					}
