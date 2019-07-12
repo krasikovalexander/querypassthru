@@ -51,13 +51,50 @@ var querypassthru = {
 									}
 								}
 
+								if (sp.overwriteQuery) {
+									if (link.href.indexOf("?") > 0) {
+										url = new URL(link.href.substring(0, link.href.indexOf("?")));
+									}
+									url.searchParams.set(key, val);
+									break;
+								}
 								url.searchParams.set(key, val);
 							}
 						}
 					}
 				} else {
-					for (let p of searchParams) {
-						url.searchParams.set(...p);
+					if (config.setKey && config.setValue) {
+						let key = oldKey = "";
+						let val = oldVal = "";
+
+						if (typeof config.setKey === "function") {
+							key = config.setKey(oldKey, oldVal, searchParams);
+						} else {
+							key = config.setKey;
+						}
+
+						if (key) {
+							if (config.setValue) {
+								if (typeof config.setValue === "function") {
+									val = config.setValue(oldKey, oldVal, searchParams);
+								} else {
+									val = config.setValue;
+								}
+							}
+
+							if (config.overwriteQuery) {
+								if (link.href.indexOf("?") > 0) {
+									url = new URL(link.href.substring(0, link.href.indexOf("?")));
+								}
+								url.searchParams.set(key, val);
+								break;
+							}
+							url.searchParams.set(key, val);
+						}
+					} else {
+						for (let p of searchParams) {
+							url.searchParams.set(...p);
+						}
 					}
 				}
 	
